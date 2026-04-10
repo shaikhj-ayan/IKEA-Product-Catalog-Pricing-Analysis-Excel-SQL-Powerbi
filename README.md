@@ -123,15 +123,7 @@ The dashboard has 3 pages:
 * Treemap for category value
 * Top categories by total price
 
-### 📷 Preview
-
-```md
-![Overview](images/overview.png)
-![Product](images/product.png)
-![Category](images/category.png)
-```
-
 ## 👤 Author & Contact
 
 Shaikh Ayan
-📧 [shaikhayan1.in@gmail.com](mailto:shaikhayan1.in@gmail.com)
+📧 shaikhayan1.in@gmail.com
