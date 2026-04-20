@@ -2,21 +2,22 @@
 --                  ANALYSIS QUERIES (SQL)
 -- ============================================================
 
--- 1. Identifying the "Flagship" (most expensive) product
+
+-- 1. Find the single most expensive item
 SELECT title, price 
 FROM ikea.products 
 ORDER BY price DESC 
 LIMIT 1;
 
 
--- 2. Catalog density by category
-SELECT category, COUNT(*) as volume
+-- 2. Count how many items are in each category
+SELECT category, COUNT(*) as total_items
 FROM ikea.products 
 GROUP BY category 
-ORDER BY volume DESC;
+ORDER BY total_items DESC;
 
 
--- 3. Top 10 Premium Tier items (High-end outliers)
+-- 3. List the 10 most expensive items
 SELECT 
     title, 
     price 
@@ -25,7 +26,7 @@ ORDER BY price DESC
 LIMIT 10;
 
 
--- 4. Top 10 Entry-level items (Loss leaders/Budget)
+-- 4. List the 10 cheapest items
 SELECT 
     title, 
     price 
@@ -34,54 +35,57 @@ ORDER BY price ASC
 LIMIT 10;
 
 
--- 5. Average pricing per category (Sorted by premium level)
+-- 5. Average price for every category
 SELECT 
     category, 
-    AVG(price) as avg_unit_price
+    AVG(price) as average_price
 FROM ikea.products 
 GROUP BY category 
-ORDER BY avg_unit_price DESC;
+ORDER BY average_price DESC;
 
 
--- 6. Market Positioning: Identifying High-End vs Affordable categories
+-- 6. Label categories as above or below the overall average price
 SELECT 
     category,
-    AVG(price) as cat_avg,
-    COUNT(*) as sku_count,
-    IF(AVG(price) > (SELECT AVG(price) FROM ikea.products), 'High-End', 'Affordable') as segment
+    AVG(price) as category_avg,
+    COUNT(*) as item_count,
+    CASE 
+        WHEN AVG(price) > (SELECT AVG(price) FROM ikea.products) THEN 'Expensive' 
+        ELSE 'Affordable' 
+    END as price_group
 FROM ikea.products
 GROUP BY category
-ORDER BY cat_avg DESC;
+ORDER BY category_avg DESC;
 
 
--- 7. Price gap analysis: Restaurant vs Grocery food items
+-- 7. Difference in price between the top Restaurant item and top Food item
 SELECT 
     MAX(CASE WHEN category LIKE '%restaurant%' THEN price END) - 
-    MAX(CASE WHEN category = 'IKEA Food' THEN price END) as food_price_delta
+    MAX(CASE WHEN category = 'IKEA Food' THEN price END) as price_diff
 FROM ikea.products
 WHERE category IN ('IKEA Food & Swedish restaurant', 'IKEA Food');
 
 
--- 8. Global Inventory Distribution by Price Tier
+-- 8. Group all products into price buckets
 SELECT 
     CASE 
-        WHEN price < 500 THEN 'Budget'
-        WHEN price < 2000 THEN 'Mid-Tier'
-        WHEN price < 5000 THEN 'Premium'
-        ELSE 'Luxury' 
-    END as tier,
-    COUNT(*) as count
+        WHEN price < 500 THEN 'Under 500'
+        WHEN price < 2000 THEN '500 to 2000'
+        WHEN price < 5000 THEN '2000 to 5000'
+        ELSE 'Over 5000' 
+    END as price_range,
+    COUNT(*) as item_count
 FROM ikea.products 
-GROUP BY tier
+GROUP BY price_range
 ORDER BY MIN(price);
 
 
--- 9. Subcategory deep-dive: Granular pricing levels
+-- 9. Breakdown of prices by category and subcategory
 SELECT 
     category, 
     subcategory,
-    COUNT(*) as skus,
-    ROUND(AVG(price)) as avg_price
+    COUNT(*) as item_count,
+    AVG(price) as average_price
 FROM ikea.products
 GROUP BY category, subcategory
-ORDER BY category, avg_price DESC;
+ORDER BY category, average_price DESC;
