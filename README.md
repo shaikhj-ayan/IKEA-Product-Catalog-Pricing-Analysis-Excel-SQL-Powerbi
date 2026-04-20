@@ -1,7 +1,3 @@
-Here’s your **clean, simple, human-written README** in the same style as your reference. I kept the language basic, removed heavy wording, and added space for dashboard screenshots.
-
----
-
 # 🛋️ IKEA Product Catalog & Pricing Analysis
 
 Analysis of IKEA product data to understand pricing patterns, category behavior, and product distribution using **SQL, Excel, and Power BI**.
@@ -253,9 +249,3 @@ Based on the analysis:
 **Email:** [shaikhayan1.in@gmail.com](mailto:shaikhayan1.in@gmail.com)
 **GitHub:** [https://github.com/shaikhj-ayan](https://github.com/shaikhj-ayan)
 
----
-
-If you want next step, I can also:
-
-* make this **more recruiter-focused (short + sharp)**
-* or help you add a **Power BI dashboard story (what to say in interview)**
